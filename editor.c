@@ -18,9 +18,6 @@ void inputtext(){
     lineCount = 0;
 
 
-    int c;
-    while ((c = getchar()) != '\n' && c != EOF);
-
     while(lineCount < MAX_LINES) {
 
         fgets(text[lineCount], MAX_COLS, stdin);
@@ -32,5 +29,6 @@ void inputtext(){
         }
 
         lineCount++;
+        printf("DEBUG lineCount sekarang: %d\n", lineCount);
     }
 }
