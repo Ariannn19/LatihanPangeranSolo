@@ -13,16 +13,21 @@ void displayText() {
 
 void inputtext(){
 
-     printf("Masukkan teks (ketik 'END' untuk selesai):\n");
+    printf("Masukkan teks (ketik 'END' untuk selesai):\n");
 
     lineCount = 0;
+
+
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
 
     while(lineCount < MAX_LINES) {
 
         fgets(text[lineCount], MAX_COLS, stdin);
         text[lineCount][strcspn(text[lineCount], "\n")] = '\0';
 
-        if(strncmp(text[lineCount], "END", 3) == 0) {
+     
+        if(strcmp(text[lineCount], "END") == 0) {
             break;
         }
 
