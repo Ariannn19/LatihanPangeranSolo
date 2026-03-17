@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include "editor.h"
 
 char text[MAX_LINES][MAX_COLS];
