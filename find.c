@@ -6,18 +6,20 @@
 void findword(char text[][100], int lineCount) {
 
     char keyword[50];
+    int found = 0;
 
     printf("Masukkan kata yang ingin dicari: ");
-    scanf("%s", keyword);
-    getchar(); 
-
-    int found = 0;
+    scanf("%49s", keyword);  // lebih aman (hindari overflow)
+    getchar(); // bersihin newline dari buffer
 
     for(int i = 0; i < lineCount; i++) {
 
+        // DEBUG (boleh dihapus nanti)
+        // printf("DEBUG: [%s]\n", text[i]);
+
         if(strstr(text[i], keyword) != NULL) {
 
-            printf("Ditemukan di baris %d: %s", i+1, text[i]);
+            printf("Ditemukan di baris %d: %s\n", i + 1, text[i]);
             found = 1;
         }
     }
