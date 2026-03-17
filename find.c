@@ -13,11 +13,12 @@ void findword(char text[][100], int lineCount) {
     fgets(keyword, sizeof(keyword), stdin);
     keyword[strcspn(keyword, "\n")] = '\0';
 
+    printf("DEBUG keyword: [%s]\n", keyword);
+    printf("DEBUG lineCount: %d\n", lineCount);
+
     for(int i = 0; i < lineCount; i++) {
 
-        // DEBUG
         printf("DEBUG text[%d]: [%s]\n", i, text[i]);
-        printf("DEBUG keyword: [%s]\n", keyword);
 
         if(strstr(text[i], keyword) != NULL) {
             printf("Ditemukan di baris %d: %s\n", i + 1, text[i]);
