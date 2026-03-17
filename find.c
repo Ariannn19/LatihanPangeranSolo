@@ -3,7 +3,7 @@
 #include "editor.h"
 #include "find.h"
 
-void findword(char text[][100], int lineCount) {
+void findword(char text[][200], int lineCount) {
 
     char keyword[50];
     int found = 0;
