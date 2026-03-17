@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "editor.h"
+#include "find.h"
 
 int main() {
 
@@ -9,8 +10,9 @@ int main() {
 
         printf("\n=== TEXT EDITOR ===\n");
         printf("1. Display Text\n");
-        printf("2. input Text\n");
-        printf("3. Exit\n");
+        printf("2. Input Text\n");
+        printf("3. Find word\n");
+        printf("4. Exit\n");
 
         printf("Choice: ");
         scanf("%d",&choice);
@@ -24,9 +26,11 @@ int main() {
             case 2:
                 inputtext();
                 break;
+            case 3:
+                findword();
         }
 
-    } while(choice != 3);
+    } while(choice != 4);
 
     return 0;
 }
