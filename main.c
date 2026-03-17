@@ -27,7 +27,7 @@ int main() {
                 inputtext();
                 break;
             case 3:
-                findword();
+                findword(text,lineCount);
         }
 
     } while(choice != 4);
