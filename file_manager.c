@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include "file_manager.h"
 
 void save_ke_file(char filename[], char kertas [100][50], int jumlah_baris) 
@@ -18,21 +19,26 @@ void save_ke_file(char filename[], char kertas [100][50], int jumlah_baris)
     fclose(file);
 }
 
-void load_dari_file(char filename[], char kertas [100][50], int *jumlah_baris)
+int load_dari_file(char filename[], char kertas [100][50]) 
 {
     FILE *file = fopen(filename, "r");
 
     if (file == NULL)
     {
-        printf("Gagal membuka file untuk dimuat.\n");
-        return;
+        printf("File %s tidak ditemukan.\n", filename);
+        return 0;
     }
 
-    printf("Isi file: \n");
-    char buffer[150];
-    while(fgets(buffer, sizeof(buffer), file) != NULL) {
-        printf("%s", buffer);
+    char buffer[50];
+    int jumlah_baris = 0;
+
+    while(fgets(buffer, sizeof(buffer), file) != NULL && jumlah_baris < 100) {
+        buffer[strcspn(buffer, "\n")] = '\0'; // Menghapus newline
+        strncpy(kertas[jumlah_baris], buffer, 50);
+        jumlah_baris++;
     }
+
     fclose(file);
-    printf("File berhasil dimuat.\n");
+    printf("Berhasil memuat %d baris dari file %s.\n", jumlah_baris, filename);
+    return jumlah_baris;
 }
