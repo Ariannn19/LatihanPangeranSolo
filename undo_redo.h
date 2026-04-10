@@ -2,8 +2,8 @@
 #define undo_redo_h
 
 typedef struct {
-    char riwayat_kertas[10][100][256];
-    int riwayat_baris[10];
+    char riwayat_kertas[100][100][100];
+    int riwayat_baris[100];
     int top;
     int max_top;
 } stack;
