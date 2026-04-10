@@ -2,18 +2,23 @@
 #include <stdlib.h>
 #include <string.h>
 #include <conio.h>
-#include <windows.h>
+#include <windows.h> 
 #include "kasfa.h"
 #include "arian.h"
 #include "file_manager.h"
 #include "undo_redo.h"
 
+// Variabel linecount, cursorX, cursorY, text, dll sudah di-extern di arian.h
+// dan dideklarasikan di arian.c. Jadi tidak perlu ditulis ulang di sini, 
+// KECUALI variabel untuk riwayat Undo/Redo.
+stack riwayat; 
+
 int main() {
     char pilihan; 
     char nama_file[50];
-
-    // Persiapan Awal
-    if(linecount == 0) linecount = 1; 
+    
+    // Sinkronisasi dengan variabel 'lines' milik arian.c
+    if(lines == 0) lines = 1; 
 
     while(1) {
         system("cls"); 
@@ -29,112 +34,105 @@ int main() {
         
         pilihan = _getch(); 
 
-        // GABUNGAN MENU 1 (NEW) DAN 2 (OPEN)
         if (pilihan == '1' || pilihan == '2') {
             
             if (pilihan == '1') {
-                // SETUP NEW FILE
-                cursorX = 0; cursorY = 0; linecount = 1;
+                cursorX = 0; cursorY = 0; lines = 1;
                 text[0][0] = '\0'; 
                 
                 init_stack(&riwayat);
-                push(&riwayat, text, linecount); 
+                push(&riwayat, text, lines); 
             } 
             else if (pilihan == '2') {
-                // SETUP OPEN FILE
                 system("cls");
                 printf("Masukkan nama file untuk dibuka: ");
                 scanf("%s", nama_file);
-                getchar(); // Membersihkan sisa enter
+                getchar(); 
 
                 int loadedLines = load_dari_file(nama_file, text);
                 
                 if (loadedLines > 0) {
-                    linecount = loadedLines; // Update jumlah baris
+                    lines = loadedLines; // Gunakan 'lines' (milik arian.c), bukan linecount
                     cursorX = 0; cursorY = 0;
                     
                     init_stack(&riwayat);
-                    push(&riwayat, text, linecount); 
+                    push(&riwayat, text, lines); 
                 } else {
                     printf("\nGagal memuat file. Tekan tombol apa saja untuk kembali...");
                     _getch();
-                    continue; // Batal masuk editor, kembali ke awal while menu
+                    continue; 
                 }
             }
 
-            // ==========================================
-            // LIVE EDITOR LOOP (Langsung di dalam main)
-            // ==========================================
-            render_editor();
+            // GANTI render_editor() MENJADI render()
+            render();
             
             while(1) {
                 int ch = _getch();
                 
-                if (ch == 224 || ch == 0) { // Tombol Panah
+                if (ch == 224 || ch == 0) { 
                     ch = _getch();
                     moveCursor(ch);
                 }
-                else if (ch == 27) { // ESC: Keluar ke Menu Utama
-                    push(&riwayat, text, linecount);
-                    break; // Memecah loop editor, kembali ke loop menu
+                else if (ch == 27) { 
+                    push(&riwayat, text, lines);
+                    break; 
                 }
-                else if (ch == 26) { // Ctrl+Z: Undo
-                    pop(&riwayat, text, &linecount);
+                else if (ch == 26) { 
+                    pop(&riwayat, text, &lines);
                     cursorX = 0; cursorY = 0; 
                 }
-                else if (ch == 25) { // Ctrl+Y: Redo
-                    redo(&riwayat, text, &linecount);
+                else if (ch == 25) { 
+                    redo(&riwayat, text, &lines);
                     cursorX = 0; cursorY = 0; 
                 }
-                else if (ch == 19) { // Ctrl+S: Save
+                else if (ch == 19) { 
                     system("cls");
                     printf("--- MODE SAVE ---\nMasukkan nama file (misal: tugas.txt): ");
                     scanf("%s", nama_file);
                     getchar(); 
-                    save_ke_file(nama_file, text, linecount);
+                    save_ke_file(nama_file, text, lines);
                     printf("File %s berhasil disimpan! Tekan apa saja untuk lanjut...", nama_file);
                     _getch();
                 }
-                else if (ch == 6) { // Ctrl+F: Find
+                else if (ch == 6) { 
                     system("cls");
                     printf("--- MODE CARI KATA ---\n");
-                    find(text, linecount);
+                    find(text, lines); // Pastikan paramater ke-2 di kasfa.c bertipe int (bukan pointer)
                     printf("\nTekan tombol apa saja untuk kembali ke editor...");
                     _getch();
                 }
-                else if (ch == 23) { // Ctrl+W: Word Counter
+                else if (ch == 23) { 
                     system("cls");
                     printf("--- ANALISIS DOKUMEN ---\n");
-                    wordcounter(text, linecount);
+                    wordcounter(text, lines);
                     printf("\n\nTekan tombol apa saja untuk kembali ke editor...");
                     _getch();
                 }
-                else if (ch == 18) { // Ctrl+R: Wrap Text
+                else if (ch == 18) { 
                     system("cls");
                     printf("--- TAMPILAN WRAP TEXT ---\n");
-                    wraptext(text, linecount);
+                    wraptext(text, lines);
                     printf("\nTekan tombol apa saja untuk kembali ke editor...");
                     _getch();
                 }
-                else if (ch == '\r') { // Enter
+                else if (ch == '\r') { 
                     enterKey();
-                    push(&riwayat, text, linecount); 
+                    push(&riwayat, text, lines); 
                 }
-                else if (ch == '\b') { // Backspace
-                    backspace_editor();
+                else if (ch == '\b') { 
+                    // GANTI backspace_editor() MENJADI backspace()
+                    backspace();
                 }
-                else if (ch >= 32 && ch <= 126) { // Ketik huruf biasa
+                else if (ch >= 32 && ch <= 126) { 
                     insertChar((char)ch);
                 }
                 
-                render_editor(); // Selalu render ulang setelah aksi
+                // GANTI render_editor() MENJADI render()
+                render(); 
             }
-            // ==========================================
-            // AKHIR DARI LIVE EDITOR LOOP
-            // ==========================================
         } 
         else if (pilihan == '3') {
-            // HELP
             system("cls");
             printf("=== PANDUAN PENGGUNAAN ===\n");
             printf("Navigasi:\n");
@@ -151,10 +149,9 @@ int main() {
             _getch();
         } 
         else if (pilihan == '4') {
-            // KELUAR
             system("cls");
             printf("Terima kasih telah menggunakan Pangeran Solo Text Editor!\n");
-            break; // Keluar dari aplikasi sepenuhnya
+            break; 
         }
     }
     
