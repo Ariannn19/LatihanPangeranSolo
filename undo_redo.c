@@ -15,7 +15,7 @@ int is_empty(stack *s) {
     }
 }
 
-void push(stack *s, char kertas_sekarang[100][256], int jumlah_baris) {
+void push(stack *s, char kertas_sekarang[100][100], int jumlah_baris) {
     if (s->top >= 9) { // Pastikan tidak melebihi kapasitas stack}
         printf("Riwayat penuh.\n");
         return;
@@ -29,7 +29,7 @@ void push(stack *s, char kertas_sekarang[100][256], int jumlah_baris) {
     }
 }
 
-void pop(stack *s, char kertas_tujuan[100][256], int *jumlah_baris_tujuan) {
+void pop(stack *s, char kertas_tujuan[100][100], int *jumlah_baris_tujuan) {
     if (is_empty(s) == 1) {
         printf("Tidak ada riwayat untuk di-undo.\n");
         return;
@@ -48,7 +48,7 @@ void pop(stack *s, char kertas_tujuan[100][256], int *jumlah_baris_tujuan) {
     }
 }
 
-void redo(stack *s, char kertas_tujuan[100][256], int *jumlah_baris_tujuan) {
+void redo(stack *s, char kertas_tujuan[100][100], int *jumlah_baris_tujuan) {
     if (s->top >= s->max_top) {
         printf("Tidak ada riwayat untuk di-redo.\n");
         return;

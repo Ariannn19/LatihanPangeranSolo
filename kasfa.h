@@ -1,7 +1,7 @@
 #ifndef kasfa_H
 #define kasfa_H
 #define max_brs 100
-#define max_chr 256
+#define max_chr 100
 
 extern char text[max_brs][max_chr];
 extern int linecount;
