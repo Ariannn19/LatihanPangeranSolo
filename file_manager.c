@@ -2,7 +2,7 @@
 #include <string.h>
 #include "file_manager.h"
 
-void save_ke_file(char filename[], char kertas [100][50], int jumlah_baris) 
+void save_ke_file(char filename[], char kertas [100][256], int jumlah_baris) 
 {
     FILE *file = fopen(filename, "w");
 
@@ -19,7 +19,7 @@ void save_ke_file(char filename[], char kertas [100][50], int jumlah_baris)
     fclose(file);
 }
 
-int load_dari_file(char filename[], char kertas [100][50]) 
+int load_dari_file(char filename[], char kertas [100][256]) 
 {
     FILE *file = fopen(filename, "r");
 
@@ -29,12 +29,12 @@ int load_dari_file(char filename[], char kertas [100][50])
         return 0;
     }
 
-    char buffer[50];
+    char buffer[256];
     int jumlah_baris = 0;
 
     while(fgets(buffer, sizeof(buffer), file) != NULL && jumlah_baris < 100) {
         buffer[strcspn(buffer, "\n")] = '\0'; // Menghapus newline
-        strncpy(kertas[jumlah_baris], buffer, 50);
+        strncpy(kertas[jumlah_baris], buffer, 256);
         jumlah_baris++;
     }
 
